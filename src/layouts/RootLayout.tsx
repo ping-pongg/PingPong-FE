@@ -1,11 +1,13 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom'
+import Header from '@/components/Layout/Header'
 
 export default function RootLayout() {
   return (
-    <div>
-      {/* 공통 헤더 자리 */}
-      <Outlet />
-      {/* 공통 푸터 자리 */}
-    </div>
-  );
+    <>
+      <Header />
+      <main className='pt-16'>
+        <Outlet />
+      </main>
+    </>
+  )
 }
