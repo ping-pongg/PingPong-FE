@@ -13,7 +13,7 @@ export default function LoginPage() {
         <AuthTitle title='LOGIN' subtitle='Welcome PingPong' />
 
         <AuthForm>
-          <AuthInput placeholder='email' />
+          <AuthInput placeholder='email' type='email' />
           <AuthInput placeholder='password' type='password' />
           <AuthButton>Start PingPong</AuthButton>
         </AuthForm>
