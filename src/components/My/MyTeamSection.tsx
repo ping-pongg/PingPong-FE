@@ -1,0 +1,19 @@
+import NewChangesSlider from './NewChangesSlider'
+import AllProjectsSection from './AllProjectsSection'
+import Plus from '@/assets/plus_white.svg?react'
+
+export default function MyTeamSection() {
+  return (
+    <section>
+      <div className='flex justify-between items-center mb-16 px-32'>
+        <h2 className='text-2xl tracking-tight font-bold'>MY TEAM</h2>
+        <button className='flex items-center justify-center pl-3 pr-4 py-2 rounded-full bg-black text-white text-sm'>
+          <Plus className='w-5 h-5 mr-1.5' /> NEW
+        </button>
+      </div>
+
+      <NewChangesSlider />
+      <AllProjectsSection />
+    </section>
+  )
+}
