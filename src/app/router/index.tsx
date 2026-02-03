@@ -6,6 +6,7 @@ import LoginPage from '@/pages/Auth/Login'
 import SignupPage from '@/pages/Auth/Signup'
 import MyPage from '@/pages/Users/My'
 import { PATH } from './path'
+import TeamCreatePage from '@/pages/Team/TeamCreatePage'
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
           { path: PATH.login, element: <LoginPage /> },
           { path: PATH.signup, element: <SignupPage /> },
           { path: PATH.my, element: <MyPage /> },
+          { path: PATH.team.create, element: <TeamCreatePage /> },
         ],
       },
     ],
