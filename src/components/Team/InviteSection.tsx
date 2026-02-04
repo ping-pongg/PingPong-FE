@@ -1,28 +1,38 @@
+import { useState } from 'react'
 import InviteCard from './InviteCard'
 import Title from '../common/Title'
 import Plus from '@/assets/plus.svg?react'
-
-const DUMMY_MEMBERS = [
-  { id: 1, name: 'PARK SEEUN', email: 'seeun3139@sookmyung.ac.kr' },
-  { id: 2, name: 'KIM MINJI', email: 'minji@sookmyung.ac.kr' },
-  { id: 3, name: 'LEE JIWON', email: 'jiwon@sookmyung.ac.kr' },
-  { id: 4, name: 'CHOI YUNA', email: 'yuna@sookmyung.ac.kr' },
-  { id: 5, name: 'JUNG SOYEON', email: 'soyeon@sookmyung.ac.kr' },
-  { id: 6, name: 'HAN JISU', email: 'jisu@sookmyung.ac.kr' },
-]
+import InviteModal from './InviteModal'
+import { User } from '@/types/user'
 
 export default function InviteSection() {
+  const [isOpen, setOpen] = useState(false)
+  const [members, setMembers] = useState<User[]>([])
+
   return (
     <section>
-      <Title size='lg' right={<Plus className='w-7 h-7 cursor-pointer' />}>
+      <Title
+        size='lg'
+        right={<Plus onClick={() => setOpen(true)} className='w-7 h-7 cursor-pointer' />}
+      >
         ALL
       </Title>
 
-      <div className='mt-6 grid grid-cols-3 gap-4'>
-        {DUMMY_MEMBERS.map((member) => (
+      <div className='mt-4 grid grid-cols-3 gap-4'>
+        {members.map((member) => (
           <InviteCard key={member.id} name={member.name} email={member.email} />
         ))}
       </div>
+
+      {isOpen && (
+        <InviteModal
+          onClose={() => setOpen(false)}
+          onInvite={(invited) => {
+            setMembers((prev) => [...prev, ...invited])
+            setOpen(false)
+          }}
+        />
+      )}
     </section>
   )
 }
