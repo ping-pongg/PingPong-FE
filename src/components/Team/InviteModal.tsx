@@ -1,7 +1,7 @@
 import { useState } from 'react'
+import { User } from '@/types/user'
 import Modal from '../common/Modal'
 import Button from '../common/Button'
-import { User } from '@/types/user'
 
 const USERS: User[] = [
   { id: 1, name: 'PARK SEEUN', email: 'seeun3139@sookmyung.ac.kr' },
@@ -12,7 +12,7 @@ const USERS: User[] = [
 
 interface Props {
   onClose: () => void
-  onInvite: (users: User[]) => void
+  onInvite?: (users: User[]) => void
 }
 
 export default function InviteModal({ onClose, onInvite }: Props) {
