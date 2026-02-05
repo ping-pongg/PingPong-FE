@@ -1,3 +1,5 @@
+export type TeamRole = 'frontend' | 'backend' | 'pm'
+
 export const PATH = {
   home: '/',
   login: '/login',
@@ -7,7 +9,6 @@ export const PATH = {
   team: {
     create: '/team/create',
     detail: (teamId: string | number) => `/team/${teamId}`,
-    developer: (teamId: string | number, userId: string | number) =>
-      `/team/${teamId}/developer/${userId}`,
+    role: (teamId: string | number, role: TeamRole) => `/team/${teamId}/${role}`,
   },
 } as const
