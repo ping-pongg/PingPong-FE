@@ -15,7 +15,7 @@ export default function NotionSection() {
           </p>
         </div>
 
-        <button className='shrink-0 rounded-full border border-black/20 px-6 py-2 text-sm font-medium hover:bg-black hover:text-white transition'>
+        <button className='shrink-0 cursor-pointer rounded-full border border-black/20 px-6 py-2 text-sm font-medium hover:bg-black hover:text-white transition'>
           CONNECT
         </button>
       </div>

@@ -1,5 +1,5 @@
 import TeamTitle from '@/components/Team/TeamTitle'
-import InviteSection from '@/components/Team/InviteSection'
+import CreatorSection from '@/components/Team/CreatorSection'
 import LinkSection from '@/components/Team/LinkSection'
 import NotionSection from '@/components/Team/NotionSection'
 import Button from '@/components/common/Button'
@@ -10,7 +10,7 @@ export default function TeamCreatePage() {
       <TeamTitle />
 
       <div className='mt-12 space-y-16'>
-        <InviteSection />
+        <CreatorSection />
         <LinkSection />
         <NotionSection />
       </div>

@@ -8,8 +8,8 @@ import GithubIcon from '@/assets/github.svg?react'
 
 export default function LinkSection() {
   return (
-    <section>
-      <Title size='lg'>LINKS</Title>
+    <section className='rounded-xl border border-black/10 bg-white/60 px-6 py-8'>
+      <Title size='md'>LINKS</Title>
 
       <div className='grid grid-cols-2 gap-x-5 gap-y-4'>
         <LinkItem
