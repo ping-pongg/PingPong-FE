@@ -1,0 +1,62 @@
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { useAuthStore } from '@/stores/authStore'
+
+interface AxiosRequestConfigWithRetry extends AxiosRequestConfig {
+  _retry?: boolean
+}
+
+const client = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 5000,
+})
+
+client.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken
+  if (token && config.headers) {
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+  return config
+})
+
+client.interceptors.response.use(
+  (res) => res,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfigWithRetry
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        const { refreshToken } = useAuthStore.getState()
+        const reissueRes = await axios.post(
+          '/api/v1/auth/reissue',
+          {},
+          {
+            baseURL: import.meta.env.VITE_API_BASE_URL,
+            headers: {
+              'Refresh-Token': refreshToken,
+            },
+          },
+        )
+
+        const newAccessToken = reissueRes.headers['access-token'] as string
+
+        useAuthStore.getState().setAuth({
+          accessToken: newAccessToken,
+          refreshToken,
+          user: useAuthStore.getState().user!,
+        })
+
+        if (originalRequest.headers) {
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+        }
+        return client(originalRequest)
+      } catch (err) {
+        useAuthStore.getState().logout()
+        return Promise.reject(err)
+      }
+    }
+    return Promise.reject(error)
+  },
+)
+
+export { client }
