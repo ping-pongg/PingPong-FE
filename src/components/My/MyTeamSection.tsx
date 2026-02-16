@@ -1,5 +1,9 @@
+import { useEffect } from 'react'
+import useApi from '@/hook/useApi'
+import { getTeams } from '@/api/team'
 import { useNavigate } from 'react-router-dom'
 import { PATH } from '@/app/router/path'
+import { Team } from '@/types/team'
 
 import NewChangesSlider from './NewChangesSlider'
 import AllProjectsSection from './AllProjectsSection'
@@ -7,6 +11,14 @@ import Plus from '@/assets/plus_white.svg?react'
 
 export default function MyTeamSection() {
   const navigate = useNavigate()
+
+  const { execute, data } = useApi<Team[]>(getTeams)
+
+  useEffect(() => {
+    execute()
+  }, [execute])
+
+  const teams = data ?? []
 
   return (
     <section>
@@ -20,8 +32,8 @@ export default function MyTeamSection() {
         </button>
       </div>
 
-      <NewChangesSlider />
-      <AllProjectsSection />
+      <NewChangesSlider teams={teams} />
+      <AllProjectsSection teams={teams} />
     </section>
   )
 }
