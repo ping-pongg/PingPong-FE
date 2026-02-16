@@ -2,22 +2,17 @@ import { useState, useEffect } from 'react'
 import SliderArrow from './SliderArrow'
 import ProjectCard from './ProjectCard'
 import Title from '../common/Title'
-import { Project } from '@/types/project'
+import { Team } from '@/types/team'
 
-const items: Project[] = [
-  { id: 1, status: 'OPEN', title: 'HACKATHON', thumbnail: '/images/hackathon.png' },
-  { id: 2, status: 'OPEN', title: 'HACKATHON', thumbnail: '/images/hackathon.png' },
-  { id: 3, status: 'OPEN', title: 'HACKATHON', thumbnail: '/images/hackathon.png' },
-  { id: 4, status: 'OPEN', title: 'HACKATHON', thumbnail: '/images/hackathon.png' },
-  { id: 5, status: 'OPEN', title: 'HACKATHON', thumbnail: '/images/hackathon.png' },
-]
+interface Props {
+  teams: Team[]
+}
 
-const CARD_W = 295
-const GAP = 24
-
-export default function NewChangesSlider() {
+export default function NewChangesSlider({ teams }: Props) {
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(4)
+
+  const items = teams.filter((team) => team.isUpdated)
 
   useEffect(() => {
     const calcVisible = () => {
@@ -35,7 +30,7 @@ export default function NewChangesSlider() {
   const maxIndex = Math.max(items.length - visible, 0)
 
   return (
-    <section className='relative mb-14 w-full'>
+    <section className='relative mb-14 w-full min-h-60'>
       <div className='max-w-7xl mx-32'>
         <Title>NEW CHANGES</Title>
 
@@ -43,12 +38,12 @@ export default function NewChangesSlider() {
           <div
             className='flex gap-6 transition-transform duration-300'
             style={{
-              transform: `translateX(-${index * (CARD_W + GAP)}px)`,
+              transform: `translateX(-${index * (295 + 24)}px)`,
             }}
           >
-            {items.map((project) => (
-              <div key={project.id} className='shrink-0 w-73.75'>
-                <ProjectCard project={project} />
+            {items.map((team) => (
+              <div key={team.teamId} className='shrink-0 w-73.75'>
+                <ProjectCard team={team} />
               </div>
             ))}
           </div>
