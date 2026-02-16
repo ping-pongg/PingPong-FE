@@ -2,9 +2,11 @@ interface LinkItemProps {
   label: string
   placeholder: string
   icon: React.ReactNode
+  value: string
+  onChange: (value: string) => void
 }
 
-export default function LinkItem({ label, placeholder, icon }: LinkItemProps) {
+export default function LinkItem({ label, placeholder, icon, value, onChange }: LinkItemProps) {
   return (
     <div className='rounded-xl border border-black/10 bg-white/70 p-4'>
       <div className='flex items-center gap-3 mb-3'>
@@ -13,6 +15,8 @@ export default function LinkItem({ label, placeholder, icon }: LinkItemProps) {
       </div>
 
       <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className='
           w-full rounded-md border border-black/10
