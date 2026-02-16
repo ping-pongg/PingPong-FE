@@ -1,4 +1,4 @@
-export type Role = 'Front' | 'Back' | 'PM' | 'QA'
+export type Role = 'FRONTEND' | 'BACKEND' | 'PM' | 'QA'
 
 export interface User {
   userId: number
@@ -6,4 +6,11 @@ export interface User {
   email?: string
   role?: Role
   pofile?: string
+}
+
+export interface Member {
+  memberId: number
+  name: string
+  email: string
+  role: Role
 }

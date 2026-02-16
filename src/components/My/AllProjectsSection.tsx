@@ -1,25 +1,20 @@
 import { useState } from 'react'
+import { Team } from '@/types/team'
 import ProjectGrid from './ProjectGrid'
 import Pagination from './Pagination'
-import { Project } from '@/types/project'
 import Title from '../common/Title'
 import SearchInput from '../common/SearchInput'
 
-const dummy: Project[] = Array.from({ length: 18 }).map((_, i) => ({
-  id: i + 1,
-  title: 'HACKATHON',
-  status: i % 2 === 0 ? 'OPEN' : 'UPDATE',
-  thumbnail: '/images/hackathon.png',
-}))
+interface Props {
+  teams: Team[]
+}
 
-export default function AllProjectsSection() {
+export default function AllProjectsSection({ teams }: Props) {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const PER_PAGE = 8
 
-  const filtered = dummy.filter((project) =>
-    project.title.toLowerCase().includes(query.toLowerCase()),
-  )
+  const filtered = teams.filter((team) => team.name.toLowerCase().includes(query.toLowerCase()))
 
   const start = (page - 1) * PER_PAGE
   const items = filtered.slice(start, start + PER_PAGE)
@@ -28,7 +23,7 @@ export default function AllProjectsSection() {
     <section className='mx-32 mb-20'>
       <Title right={<SearchInput value={query} onChange={setQuery} />}>ALL</Title>
 
-      <ProjectGrid items={items} />
+      <ProjectGrid teams={items} />
 
       <Pagination current={page} total={Math.ceil(filtered.length / PER_PAGE)} onChange={setPage} />
     </section>
