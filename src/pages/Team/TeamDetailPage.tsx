@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import MemberSection from '@/components/Team/MemberSection'
 import APISection from '@/components/Team/APISection'
 
@@ -7,44 +8,10 @@ import FigmaIcon from '@/assets/figma.svg?react'
 import DiscordIcon from '@/assets/discord.svg?react'
 import GithubIcon from '@/assets/github.svg?react'
 
-import { User } from '@/types/user'
-
-const TEAM_INFO = {
-  name: 'HACKATHON',
-  members: [
-    {
-      id: 1,
-      name: '김프론트',
-      email: 'seeun3139@sookmyung.ac.kr',
-      role: 'FRONTEND',
-    },
-    {
-      id: 2,
-      name: '이백엔드',
-      email: 'sookmyung.ac.kr',
-      role: 'BACKEND',
-    },
-    {
-      id: 3,
-      name: '박기획',
-      email: 'sookmyung.ac.kr',
-      role: 'PM',
-    },
-    {
-      id: 4,
-      name: '박기획',
-      email: 'sookmyung.ac.kr',
-      role: 'QA',
-    },
-  ] as User[],
-  links: {
-    notion: 'https://notion.so',
-    figma: 'https://figma.com',
-    github: 'https://github.com',
-    discord: 'https://discord.gg',
-    swagger: '',
-  },
-}
+import useApi from '@/hook/useApi'
+import { getTeamMembers } from '@/api/team'
+import { useLocation } from 'react-router-dom'
+import { Team } from '@/types/team'
 
 const TEAM_LINK_ICONS = {
   notion: NotionIcon,
@@ -54,16 +21,36 @@ const TEAM_LINK_ICONS = {
   swagger: SwaggerIcon,
 } as const
 
+type TeamLinkKey = keyof typeof TEAM_LINK_ICONS
+
 export default function TeamDetailPage() {
+  const location = useLocation()
+  const team = location.state as Team | undefined
+
+  const { execute, data, loading } = useApi(getTeamMembers)
+
+  useEffect(() => {
+    if (team) {
+      execute(team.teamId)
+    }
+  }, [execute, team])
+
+  if (!team) {
+    return <div>잘못된 접근입니다.</div>
+  }
+
   return (
     <main className='mx-auto max-w-250 px-6 py-30'>
       <div>
-        <h1 className='font-extrabold text-3xl'>{TEAM_INFO.name}</h1>
+        <h1 className='font-extrabold text-3xl'>{team.name}</h1>
+
         <div className='mt-4 flex items-center gap-2.5'>
-          {Object.entries(TEAM_INFO.links).map(([key, url]) => {
+          {(Object.keys(TEAM_LINK_ICONS) as TeamLinkKey[]).map((key) => {
+            const url = team[key]
+
             if (!url) return null
 
-            const Icon = TEAM_LINK_ICONS[key as keyof typeof TEAM_LINK_ICONS]
+            const Icon = TEAM_LINK_ICONS[key]
 
             return (
               <a key={key} href={url} target='_blank' rel='noopener noreferrer'>
@@ -75,7 +62,7 @@ export default function TeamDetailPage() {
       </div>
 
       <div className='mt-20 space-y-16'>
-        <MemberSection members={TEAM_INFO.members} />
+        {!loading ? <MemberSection teamId={team.teamId} members={data?.result || []} /> : <></>}
         <APISection />
       </div>
     </main>
