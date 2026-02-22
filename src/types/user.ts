@@ -14,3 +14,9 @@ export interface Member {
   email: string
   role: Role
 }
+
+export interface SearchUser {
+  memberId: number
+  nickname: string
+  email: string
+}
