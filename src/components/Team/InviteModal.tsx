@@ -6,6 +6,13 @@ import { searchMembers, inviteMember } from '@/api/team'
 import { Member, SearchUser } from '@/types/user'
 import { Role } from '@/types/user'
 
+const ROLE_API_MAP: Record<Role, string> = {
+  FRONTEND: 'FRONTEND',
+  BACKEND: 'BACKEND',
+  QA: 'QA',
+  PM: 'PROJECTMANAGER',
+}
+
 interface Props {
   teamId: number
   onClose: () => void
@@ -45,16 +52,13 @@ export default function InviteModal({ teamId, onClose, onInvite }: Props) {
 
   const handleInvite = async () => {
     try {
-      await Promise.all(
-        selected.map((user) =>
-          inviteExecute({
-            teamId,
-            memberId: user.memberId,
-            role: user.role,
-          }),
-        ),
-      )
+      const payload = selected.map((user) => ({
+        teamId,
+        memberId: user.memberId,
+        role: ROLE_API_MAP[user.role],
+      }))
 
+      await inviteExecute(payload)
       onInvite?.(selected)
       onClose()
     } catch (err) {
