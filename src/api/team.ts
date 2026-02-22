@@ -23,7 +23,7 @@ export async function createTeam(body: CreateTeamRequest) {
 export async function getTeamMembers(teamId) {
   try {
     const res = await client.get(`/api/teams/${teamId}/members`)
-    return res.data
+    return res.data.result
   } catch (error) {
     throw handleApiError(error)
   }
@@ -41,11 +41,20 @@ export async function searchMembers(keyword: string) {
   }
 }
 
-export async function inviteMember(body: InviteTeamRequest) {
+export async function inviteMember(body: InviteTeamRequest[]) {
   console.log(body)
   try {
     const res = await client.post(`/api/teams/members`, body)
     return res.data
+  } catch (error) {
+    throw handleApiError(error)
+  }
+}
+
+export async function getTeamRole(teamId) {
+  try {
+    const res = await client.get(`/api/teams/${teamId}/my-role`)
+    return res.data.result.role
   } catch (error) {
     throw handleApiError(error)
   }

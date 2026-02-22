@@ -9,7 +9,7 @@ import DiscordIcon from '@/assets/discord.svg?react'
 import GithubIcon from '@/assets/github.svg?react'
 
 import useApi from '@/hook/useApi'
-import { getTeamMembers } from '@/api/team'
+import { getTeamMembers, getTeamRole } from '@/api/team'
 import { useLocation } from 'react-router-dom'
 import { Team } from '@/types/team'
 
@@ -27,13 +27,16 @@ export default function TeamDetailPage() {
   const location = useLocation()
   const team = location.state as Team | undefined
 
-  const { execute, data, loading } = useApi(getTeamMembers)
+  const { execute: executeMembers, data: memberData, loading } = useApi(getTeamMembers)
+
+  const { execute: executeRole, data: roleData } = useApi(getTeamRole)
 
   useEffect(() => {
     if (team) {
-      execute(team.teamId)
+      executeMembers(team.teamId)
+      executeRole(team.teamId)
     }
-  }, [execute, team])
+  }, [executeMembers, executeRole, team])
 
   if (!team) {
     return <div>잘못된 접근입니다.</div>
@@ -62,8 +65,8 @@ export default function TeamDetailPage() {
       </div>
 
       <div className='mt-20 space-y-16'>
-        {!loading ? <MemberSection teamId={team.teamId} members={data?.result || []} /> : <></>}
-        <APISection />
+        {!loading ? <MemberSection teamId={team.teamId} members={memberData || []} /> : <></>}
+        <APISection role={roleData} />
       </div>
     </main>
   )
