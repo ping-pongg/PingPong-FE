@@ -1,22 +1,31 @@
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Project } from '@/types/project'
+import { Team } from '@/types/team'
 import FALLBACK_IMG from '@/assets/placeholder.svg'
 
 interface Props {
-  project: Project
+  team: Team
 }
 
-export default function ProjectCard({ project }: Props) {
-  const { status, title, thumbnail } = project
+export default function ProjectCard({ team }: Props) {
+  const navigate = useNavigate()
+  const { isUpdated, name, thumbnail, teamId } = team
   const [imgError, setImgError] = useState(false)
 
+  const handleClick = () => {
+    navigate(`/team/${teamId}`, { state: team })
+  }
+
   return (
-    <div className='cursor-pointer border border-black/10 rounded-md overflow-hidden relative'>
+    <div
+      onClick={handleClick}
+      className='cursor-pointer border border-black/10 rounded-md overflow-hidden relative'
+    >
       <span
         className={`absolute text-[10px] font-medium px-1.5 py-0.5 rounded-br-md text-black
-          ${status === 'OPEN' ? 'bg-api-blue' : 'bg-api-green'}`}
+          ${isUpdated ? 'bg-api-blue' : 'bg-api-green'}`}
       >
-        {status}
+        {isUpdated ? 'UPDATE' : 'OPEN'}
       </span>
 
       {!thumbnail || imgError ? (
@@ -26,13 +35,13 @@ export default function ProjectCard({ project }: Props) {
       ) : (
         <img
           src={thumbnail}
-          alt={title}
+          alt={name}
           onError={() => setImgError(true)}
           className='h-50 w-full object-cover'
         />
       )}
 
-      <div className='px-3 py-2.25 text-sm font-medium bg-[#F2F7FA]'>{title}</div>
+      <div className='px-3 py-2.25 text-sm font-medium bg-[#F2F7FA]'>{name}</div>
     </div>
   )
 }

@@ -1,10 +1,8 @@
-import { Role } from '@/types/user'
+import { Member } from '@/types/user'
 import Avatar from '@/assets/profile.svg?react'
 
-interface MemberCardProps {
-  name: string
-  email: string
-  role?: Role
+interface Props {
+  member: Member
 }
 
 const ROLE_STYLE = {
@@ -30,8 +28,9 @@ const ROLE_STYLE = {
   },
 } as const
 
-export default function MemberCard({ name, email, role }: MemberCardProps) {
-  const style = role ? ROLE_STYLE[role] : null
+export default function MemberCard({ member }: Props) {
+  const { name, email, role } = member
+  const style = ROLE_STYLE[role]
 
   return (
     <div
@@ -43,19 +42,19 @@ export default function MemberCard({ name, email, role }: MemberCardProps) {
 
       <div className='flex-1 flex items-center justify-between'>
         <div>
-          <div className='flex items-center justify-baseline gap-2 mb-0.5'>
-            <p className='text-lg font-semibold leading-tight mb-0.5'>{name}</p>
-            {style && (
-              <span
-                className={`inline-flex items-center justify-center
+          <div className='flex items-center gap-2 mb-0.5'>
+            <p className='text-lg font-semibold leading-tight'>{name}</p>
+
+            <span
+              className={`inline-flex items-center justify-center
               text-[10px] leading-none font-light
-              px-2 py-1 rounded-full mb-0.5
+              px-2 py-1 rounded-full
               ${style.badge}`}
-              >
-                {style.label}
-              </span>
-            )}
+            >
+              {style.label}
+            </span>
           </div>
+
           <p className='text-xs font-light text-gray-500'>{email}</p>
         </div>
       </div>

@@ -1,12 +1,24 @@
 import { createBrowserRouter } from 'react-router-dom'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
+
 import RootLayout from '@/layouts/RootLayout'
 import MainLayout from '@/layouts/MainLayout'
+import TeamLayout from '@/layouts/TeamLayout'
+
 import HomePage from '@/pages/Home'
-import LoginPage from '@/pages/Auth/Login'
-import SignupPage from '@/pages/Auth/Signup'
-import MyPage from '@/pages/Users/My'
-import TeamCreatePage from '@/pages/Team/TeamCreate'
-import TeamDetailPage from '@/pages/Team/TeamDetail'
+import LoginPage from '@/pages/Auth/LoginPage'
+import SignupPage from '@/pages/Auth/SignupPage'
+import MyPage from '@/pages/Users/MyPage'
+
+import TeamCreatePage from '@/pages/Team/TeamCreatePage'
+import TeamDetailPage from '@/pages/Team/TeamDetailPage'
+
+import BackendApiDocsPage from '@/pages/Backend/BackendApiDocs'
+import BackendApiIntegrationPage from '@/pages/Backend/BackendApiIntegrationPage'
+import FrontendApiDocsPage from '@/pages/Frontend/FrontendApiDocsPage'
+import FrontendApiIntegrationPage from '@/pages/Frontend/FrontendApiIntegrationPage'
+import PmPage from '@/pages/PM/PmPage'
+import QaPage from '@/pages/QA/QaPage'
 
 export const router = createBrowserRouter([
   {
@@ -18,9 +30,56 @@ export const router = createBrowserRouter([
           { path: '/', element: <HomePage /> },
           { path: '/login', element: <LoginPage /> },
           { path: '/signup', element: <SignupPage /> },
-          { path: '/mypage', element: <MyPage /> },
-          { path: '/team/create', element: <TeamCreatePage /> },
-          { path: '/team/:teamId', element: <TeamDetailPage /> },
+          {
+            path: '/mypage',
+            element: (
+              <ProtectedRoute>
+                <MyPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/team/create',
+            element: (
+              <ProtectedRoute>
+                <TeamCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/team/:teamId',
+            element: (
+              <ProtectedRoute>
+                <TeamDetailPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: '/team/:teamId',
+        element: (
+          <ProtectedRoute>
+            <TeamLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            path: 'backend',
+            children: [
+              { path: 'docs', element: <BackendApiDocsPage /> },
+              { path: 'integration', element: <BackendApiIntegrationPage /> },
+            ],
+          },
+          {
+            path: 'frontend',
+            children: [
+              { path: 'docs', element: <FrontendApiDocsPage /> },
+              { path: 'integration', element: <FrontendApiIntegrationPage /> },
+            ],
+          },
+          { path: 'qa', element: <QaPage /> },
+          { path: 'pm', element: <PmPage /> },
         ],
       },
     ],

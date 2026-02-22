@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import { User } from '@/types/user'
+import { Member } from '@/types/user'
 import Title from '../common/Title'
 import Plus from '@/assets/plus.svg?react'
 import MemberCard from './MemberCard'
 import InviteModal from './InviteModal'
 
-export default function MemberSection({ members }: { members: User[] }) {
+export default function MemberSection({ members, teamId }: { members: Member[]; teamId: number }) {
   const [isOpen, setOpen] = useState(false)
-
   return (
     <section>
       <Title
@@ -19,11 +18,11 @@ export default function MemberSection({ members }: { members: User[] }) {
 
       <div className='mt-4 grid grid-cols-3 gap-4'>
         {members.map((member) => (
-          <MemberCard key={member.id} {...member} />
+          <MemberCard key={member.memberId} member={member} />
         ))}
       </div>
 
-      {isOpen && <InviteModal onClose={() => setOpen(false)} />}
+      {isOpen && <InviteModal teamId={teamId} onClose={() => setOpen(false)} />}
     </section>
   )
 }

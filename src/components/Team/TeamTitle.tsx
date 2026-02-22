@@ -1,18 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditIcon from '@/assets/edit.svg?react'
 
-export default function TeamTitle() {
-  const [teamName, setTeamName] = useState('TEAM')
+interface Props {
+  value: string
+  onChange: (value: string) => void
+}
+
+export default function TeamTitle({ value, onChange }: Props) {
   const [editing, setEditing] = useState(false)
-  const [tempName, setTempName] = useState(teamName)
+  const [tempName, setTempName] = useState(value)
+
+  useEffect(() => {
+    setTempName(value)
+  }, [value])
 
   const save = () => {
-    setTeamName(tempName.trim() || 'TEAM')
+    const finalName = tempName.trim() || 'TEAM'
+    onChange(finalName)
     setEditing(false)
   }
 
   const cancel = () => {
-    setTempName(teamName)
+    setTempName(value)
     setEditing(false)
   }
 
@@ -46,11 +55,11 @@ export default function TeamTitle() {
         </div>
       ) : (
         <>
-          <h1 className='text-3xl font-bold py-2.25'>{teamName}</h1>
+          <h1 className='text-3xl font-bold py-2.25'>{value || 'TEAM'}</h1>
 
           <button
             onClick={() => {
-              setTempName(teamName)
+              setTempName(value)
               setEditing(true)
             }}
             className='

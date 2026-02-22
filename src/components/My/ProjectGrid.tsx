@@ -1,15 +1,15 @@
-import { Project } from '@/types/project'
+import { Team } from '@/types/team'
 import ProjectCard from './ProjectCard'
 
 interface Props {
-  items: Project[]
+  teams: Team[]
 }
 
-export default function ProjectGrid({ items }: Props) {
+export default function ProjectGrid({ teams }: Props) {
   return (
     <div className='grid grid-cols-4 gap-6 mb-17 min-h-115 items-start'>
-      {items.map((project) => (
-        <ProjectCard key={project.id} project={project} />
+      {teams.map((project) => (
+        <ProjectCard key={project.teamId} team={project} />
       ))}
     </div>
   )

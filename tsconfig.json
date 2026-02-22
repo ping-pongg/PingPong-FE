@@ -10,6 +10,7 @@
     "target": "ES2020",
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "moduleResolution": "bundler",
+    "module": "ESNext",
     "skipLibCheck": true
   },
   "include": ["src"]

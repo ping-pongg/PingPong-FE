@@ -1,6 +1,17 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/stores/authStore'
 
 export default function Header() {
+  const navigate = useNavigate()
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const logout = useAuthStore((state) => state.logout)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <header className='fixed top-0 left-0 z-50 w-full'>
       <div className='backdrop-blur-md bg-white/70 border-b border-gray-100'>
@@ -21,9 +32,18 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link to='/login' className='transition hover:text-black'>
-                LOGIN
-              </Link>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className='transition hover:text-black cursor-pointer'
+                >
+                  LOGOUT
+                </button>
+              ) : (
+                <Link to='/login' className='transition hover:text-black'>
+                  LOGIN
+                </Link>
+              )}
             </li>
           </ul>
         </nav>

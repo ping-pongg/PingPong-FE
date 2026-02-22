@@ -5,7 +5,7 @@
   font-weight: 100;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Thin.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Thin.woff2') format('woff2');
 }
 
 @font-face {
@@ -13,7 +13,7 @@
   font-weight: 200;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-ExtraLight.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-ExtraLight.woff2') format('woff2');
 }
 
 @font-face {
@@ -21,7 +21,7 @@
   font-weight: 300;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Light.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Light.woff2') format('woff2');
 }
 
 @font-face {
@@ -29,7 +29,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Regular.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -37,7 +37,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Medium.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -45,7 +45,7 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-SemiBold.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-SemiBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -53,7 +53,7 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Bold.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Bold.woff2') format('woff2');
 }
 
 @font-face {
@@ -61,7 +61,7 @@
   font-weight: 800;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-ExtraBold.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-ExtraBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -69,7 +69,7 @@
   font-weight: 900;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/Pretendard/Pretendard-Black.woff2') format('woff2');
+  src: url('/fonts/pretendard/Pretendard-Black.woff2') format('woff2');
 }
 
 @font-face {
@@ -95,6 +95,11 @@
   --color-api-blue: #61affe;
   --color-api-yellow: #fca130;
   --color-api-green: #49cc90;
+
+  --color-api-red-sub: #fae7e7;
+  --color-api-blue-sub: #ebf3fb;
+  --color-api-yellow-sub: #fbf1e6;
+  --color-api-green-sub: #e8f6f0;
 
   --color-bg-blue: #7eb1cc;
   --color-bg-yellow: #d2b452;
@@ -123,6 +128,26 @@
     color-mix(in srgb, var(--color-bg-yellow) 10%, transparent) 63.1%,
     color-mix(in srgb, var(--color-bg-blue) 10%, transparent) 85.59%
   );
+
+  --bg-back: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(210, 180, 82, 0.1) 85.59%
+  );
+
+  --bg-front: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(126, 177, 204, 0.1) 85.59%
+  );
+
+  --bg-pm: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(222, 138, 121, 0.1) 85.59%
+  );
+
+  --bg-qa: linear-gradient(355deg, rgba(255, 255, 255, 0.1) 14.72%, rgba(0, 161, 87, 0.1) 85.59%);
 }
 
 @layer components {
@@ -134,7 +159,32 @@
     background: var(--bg-main-gradient);
   }
 
+  .bg-back {
+    background: var(--bg-back);
+  }
+
+  .bg-front {
+    background: var(--bg-front);
+  }
+
+  .bg-pm {
+    background: var(--bg-pm);
+  }
+
+  .bg-qa {
+    background: var(--bg-qa);
+  }
+
   .screen-center {
     @apply flex min-h-screen flex-col items-center;
   }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }

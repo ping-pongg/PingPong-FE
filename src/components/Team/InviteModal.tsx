@@ -1,33 +1,69 @@
-import { useState } from 'react'
-import { User } from '@/types/user'
-import Modal from '../common/Modal'
-import Button from '../common/Button'
+import { useState, useEffect } from 'react'
+import Modal from '@/components/common/Modal'
+import Button from '@/components/common/Button'
+import useApi from '@/hook/useApi'
+import { searchMembers, inviteMember } from '@/api/team'
+import { Member, SearchUser } from '@/types/user'
+import { Role } from '@/types/user'
 
-const USERS: User[] = [
-  { id: 1, name: 'PARK SEEUN', email: 'seeun3139@sookmyung.ac.kr' },
-  { id: 2, name: 'KIM MINJI', email: 'minji@sookmyung.ac.kr' },
-  { id: 3, name: 'LEE JIWON', email: 'jiwon@sookmyung.ac.kr' },
-  { id: 4, name: 'CHOI YUNA', email: 'yuna@sookmyung.ac.kr' },
-]
-
-interface Props {
-  onClose: () => void
-  onInvite?: (users: User[]) => void
+const ROLE_API_MAP: Record<Role, string> = {
+  FRONTEND: 'FRONTEND',
+  BACKEND: 'BACKEND',
+  QA: 'QA',
+  PM: 'PROJECTMANAGER',
 }
 
-export default function InviteModal({ onClose, onInvite }: Props) {
+interface Props {
+  teamId: number
+  onClose: () => void
+  onInvite?: (users: Member[]) => void
+}
+
+export default function InviteModal({ teamId, onClose, onInvite }: Props) {
+  const { execute: searchExecute, data: searchData, loading: searchLoading } = useApi(searchMembers)
+
+  const { execute: inviteExecute, loading: inviteLoading } = useApi(inviteMember)
+
   const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState<User[]>([])
+  const [selected, setSelected] = useState<Member[]>([])
 
-  const filteredUsers = USERS.filter(
-    (user) =>
-      user.name.toLowerCase().includes(query.toLowerCase()) ||
-      user.email.toLowerCase().includes(query.toLowerCase()),
-  ).filter((user) => !selected.find((s) => s.id === user.id))
+  useEffect(() => {
+    if (query.trim()) {
+      searchExecute(query)
+    }
+  }, [query, searchExecute])
 
-  const addUser = (user: User) => {
-    setSelected([...selected, { ...user, role: 'Front' }])
+  const filteredUsers: SearchUser[] =
+    searchData?.result?.filter(
+      (user: SearchUser) => !selected.some((s) => s.memberId === user.memberId),
+    ) ?? []
+
+  const addUser = (user: SearchUser) => {
+    const mappedUser: Member = {
+      memberId: user.memberId,
+      name: user.nickname,
+      email: user.email,
+      role: 'FRONTEND',
+    }
+
+    setSelected((prev) => [...prev, mappedUser])
     setQuery('')
+  }
+
+  const handleInvite = async () => {
+    try {
+      const payload = selected.map((user) => ({
+        teamId,
+        memberId: user.memberId,
+        role: ROLE_API_MAP[user.role],
+      }))
+
+      await inviteExecute(payload)
+      onInvite?.(selected)
+      onClose()
+    } catch (err) {
+      console.error('초대 실패', err)
+    }
   }
 
   return (
@@ -42,48 +78,48 @@ export default function InviteModal({ onClose, onInvite }: Props) {
           className='w-full rounded-md border border-black/20 px-3 py-2 text-sm focus:border-api-blue focus:shadow-blue focus:outline-none'
         />
 
-        {query && filteredUsers.length > 0 && (
+        {query && filteredUsers.length > 0 && !searchLoading && (
           <ul className='absolute z-10 mt-1 w-full rounded-md border border-black/20 bg-white shadow'>
             {filteredUsers.map((user) => (
               <li
-                key={user.id}
+                key={user.memberId}
                 onClick={() => addUser(user)}
                 className='cursor-pointer px-3 py-2 text-sm hover:bg-gray-100'
               >
-                <p className='font-medium mb-1'>{user.name}</p>
-                <p className='font-light text-xs text-gray-400'>{user.email}</p>
+                <p className='mb-1 font-medium'>{user.nickname}</p>
+                <p className='text-xs font-light text-gray-400'>{user.email}</p>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <div className='space-y-2 mb-4'>
+      <div className='mb-4 space-y-2'>
         {selected.map((user) => (
           <div
-            key={user.id}
-            className='flex items-center justify-between rounded-md bg-white/50 border border-black/20 px-3 py-2'
+            key={user.memberId}
+            className='flex items-center justify-between rounded-md border border-black/20 bg-white/50 px-3 py-2'
           >
             <div>
-              <p className='text-sm font-medium mb-0.5'>{user.name}</p>
-              <p className='font-light text-xs text-gray-400'>{user.email}</p>
+              <p className='mb-0.5 text-sm font-medium'>{user.name}</p>
+              <p className='text-xs font-light text-gray-400'>{user.email}</p>
             </div>
 
             <select
-              className='rounded-md border border-black/20 px-2 py-1 text-sm'
               value={user.role}
               onChange={(e) =>
                 setSelected((prev) =>
                   prev.map((u) =>
-                    u.id === user.id ? { ...u, role: e.target.value as User['role'] } : u,
+                    u.memberId === user.memberId ? { ...u, role: e.target.value as Role } : u,
                   ),
                 )
               }
+              className='rounded border border-black/20 px-2 py-1 text-sm'
             >
-              <option>Front</option>
-              <option>Back</option>
-              <option>PM</option>
-              <option>QA</option>
+              <option value='FRONTEND'>Frontend</option>
+              <option value='BACKEND'>Backend</option>
+              <option value='PM'>PM</option>
+              <option value='QA'>QA</option>
             </select>
           </div>
         ))}
@@ -91,10 +127,10 @@ export default function InviteModal({ onClose, onInvite }: Props) {
 
       <Button
         className='w-full'
-        disabled={selected.length === 0}
-        onClick={() => onInvite(selected)}
+        disabled={selected.length === 0 || inviteLoading}
+        onClick={handleInvite}
       >
-        INVITE
+        {inviteLoading ? 'INVITING...' : 'INVITE'}
       </Button>
     </Modal>
   )
