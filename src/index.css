@@ -128,6 +128,26 @@
     color-mix(in srgb, var(--color-bg-yellow) 10%, transparent) 63.1%,
     color-mix(in srgb, var(--color-bg-blue) 10%, transparent) 85.59%
   );
+
+  --bg-back: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(210, 180, 82, 0.1) 85.59%
+  );
+
+  --bg-front: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(126, 177, 204, 0.1) 85.59%
+  );
+
+  --bg-pm: linear-gradient(
+    355deg,
+    rgba(255, 255, 255, 0.1) 14.72%,
+    rgba(222, 138, 121, 0.1) 85.59%
+  );
+
+  --bg-qa: linear-gradient(355deg, rgba(255, 255, 255, 0.1) 14.72%, rgba(0, 161, 87, 0.1) 85.59%);
 }
 
 @layer components {
@@ -139,7 +159,32 @@
     background: var(--bg-main-gradient);
   }
 
+  .bg-back {
+    background: var(--bg-back);
+  }
+
+  .bg-front {
+    background: var(--bg-front);
+  }
+
+  .bg-pm {
+    background: var(--bg-pm);
+  }
+
+  .bg-qa {
+    background: var(--bg-qa);
+  }
+
   .screen-center {
     @apply flex min-h-screen flex-col items-center;
   }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }

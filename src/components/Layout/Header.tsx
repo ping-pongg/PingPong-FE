@@ -33,7 +33,10 @@ export default function Header() {
             </li>
             <li>
               {isLoggedIn ? (
-                <button onClick={handleLogout} className='transition hover:text-black'>
+                <button
+                  onClick={handleLogout}
+                  className='transition hover:text-black cursor-pointer'
+                >
                   LOGOUT
                 </button>
               ) : (
