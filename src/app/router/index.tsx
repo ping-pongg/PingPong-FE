@@ -1,4 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
+import ProtectedRoute from '@/components/common/ProtectedRoute'
+
 import RootLayout from '@/layouts/RootLayout'
 import MainLayout from '@/layouts/MainLayout'
 import TeamLayout from '@/layouts/TeamLayout'
@@ -28,14 +30,39 @@ export const router = createBrowserRouter([
           { path: '/', element: <HomePage /> },
           { path: '/login', element: <LoginPage /> },
           { path: '/signup', element: <SignupPage /> },
-          { path: '/mypage', element: <MyPage /> },
-          { path: '/team/create', element: <TeamCreatePage /> },
-          { path: '/team/:teamId', element: <TeamDetailPage /> },
+          {
+            path: '/mypage',
+            element: (
+              <ProtectedRoute>
+                <MyPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/team/create',
+            element: (
+              <ProtectedRoute>
+                <TeamCreatePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/team/:teamId',
+            element: (
+              <ProtectedRoute>
+                <TeamDetailPage />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
       {
         path: '/team/:teamId',
-        element: <TeamLayout />,
+        element: (
+          <ProtectedRoute>
+            <TeamLayout />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: 'backend',
