@@ -9,6 +9,7 @@ import DiscordIcon from '@/assets/discord.svg?react'
 import GithubIcon from '@/assets/github.svg?react'
 
 import useApi from '@/hook/useApi'
+import { useTeamRoleStore } from '@/stores/teamRoleStore'
 import { getTeamMembers, getTeamRole } from '@/api/team'
 import { useLocation } from 'react-router-dom'
 import { Team } from '@/types/team'
@@ -26,17 +27,27 @@ type TeamLinkKey = keyof typeof TEAM_LINK_ICONS
 export default function TeamDetailPage() {
   const location = useLocation()
   const team = location.state as Team | undefined
+  const { role, setRole } = useTeamRoleStore()
 
   const { execute: executeMembers, data: memberData, loading } = useApi(getTeamMembers)
 
   const { execute: executeRole, data: roleData } = useApi(getTeamRole)
 
   useEffect(() => {
-    if (team) {
-      executeMembers(team.teamId)
+    if (!team) return
+
+    executeMembers(team.teamId)
+
+    if (!role) {
       executeRole(team.teamId)
     }
-  }, [executeMembers, executeRole, team])
+  }, [executeMembers, executeRole, team, role])
+
+  useEffect(() => {
+    if (roleData) {
+      setRole(roleData)
+    }
+  }, [roleData, setRole])
 
   if (!team) {
     return <div>잘못된 접근입니다.</div>
